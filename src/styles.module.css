@@ -1,0 +1,36 @@
+/* add css module styles here (optional) */
+
+.sr-guage-chart-wrapper{
+  position: relative;
+}
+
+.sr-guage-chart-wrapper .value, .sr-guage-chart-value{
+  text-align: center;
+  position: absolute;
+  bottom: 10px;
+  font-size: 32px;
+  line-height: 25px;
+  color: black;
+}
+
+.sr-guage-chart-wrapper .guage-label{
+  font-size: 16px;
+  color: #727272;
+}
+
+.sr-guage-chart g.arc {
+  fill: steelblue;
+}
+
+.sr-guage-chart g.pointer {
+  fill: #12af5a;
+  stroke: #12af5a;
+}
+
+.sr-guage-chart g.label text, .sr-guage-scale-text{
+  text-anchor: middle;
+  font-size: 14px;
+  font-weight: bold;
+  fill: #666;
+}
+
