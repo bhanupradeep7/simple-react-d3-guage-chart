@@ -7,15 +7,15 @@
 .sr-guage-chart-wrapper .value, .sr-guage-chart-value{
   text-align: center;
   position: absolute;
-  bottom: 10px;
+  bottom: 30%;
   font-size: 32px;
   line-height: 25px;
-  color: black;
+  color: #666;
 }
 
 .sr-guage-chart-wrapper .guage-label{
   font-size: 16px;
-  color: #727272;
+  color: #666;
 }
 
 .sr-guage-chart g.arc {

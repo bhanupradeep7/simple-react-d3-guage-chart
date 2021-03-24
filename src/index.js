@@ -11,7 +11,7 @@ export class SimpleGuageChart extends Component {
 
         window.dd3 = d3;
 
-        this.pointerHeadLength = null;
+        this.pointerLength = null;
         this.value = 0;
         this.ticks = null;
         this.tickData = null;
@@ -26,14 +26,14 @@ export class SimpleGuageChart extends Component {
             size: 300,
             width: 300,
             height: 300,
-            ringInset: 15,
-            mainRingInset: 10,
             mainRingWidth: 3,
-            ringWidth: 15,
+            mainRingInset: 5,
+            ticksRingWidth: 15,
+            ticksRingInset: 5,
 
-            pointerWidth: 6,
+            pointerWidth: 6, // should be in between 2 to 10
             pointerTailLength: 6,
-            pointerHeadLengthPercent: 0.7,
+            pointerLengthPercent: 0.6,
 
             minValue: 0,
             maxValue: 100,
@@ -47,8 +47,13 @@ export class SimpleGuageChart extends Component {
             labelFormat: d3.format('~s'),
             labelInset: 50,
 
-            arcColorFn: d3.interpolateHsl(d3.rgb('#d92121'), d3.rgb('#12af5a'))
+            tickColors: ['#d92121', '#12af5a'],
+
+            arcColor: '#b3b3b3',
+            pointerColor: '#ff0500',
         }
+
+        this.config.arcColorFn = d3.interpolateHsl(d3.rgb(this.config.tickColors[0]), d3.rgb(this.config.tickColors[1]))
 
         this.state = {
             pointer: null,
@@ -62,6 +67,10 @@ export class SimpleGuageChart extends Component {
         this.renderGraph(this.props.value);
     }
 
+    // componentWillReceiveProps(nextProps) {
+    //     this.updateConfig();
+    // }
+
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.update();
@@ -70,14 +79,52 @@ export class SimpleGuageChart extends Component {
 
     updateConfig() {
         /*Input values */
-        let p = this.props, c = this.config;
-        c.size = p.size || c.size
-        c.width = p.width || c.width;
-        c.height = p.height || c.height;
+        let p = this.props, c = this.state.config;
+        c.size = (p.size && p.size > 200) ? p.size : c.size;
 
-        c.minValue = p.minValue || c.minValue;
-        c.maxValue = p.maxValue || c.maxValue;
-        c.majorTicks = p.majorTicks || c.majorTicks;
+        // Making it a Square
+        c.width = c.size;
+        c.height = c.size;
+
+        c.minValue = p.minValue !== undefined ? p.minValue : c.minValue;
+        c.maxValue = p.maxValue !== undefined ? p.maxValue : c.maxValue;
+
+        if(p.minAngle !== undefined && p.maxAngle !== undefined && p.minAngle < p.maxAngle) {
+            c.minAngle = p.minAngle;
+            c.maxAngle = p.maxAngle;
+        }
+
+
+        c.majorTicks = p.majorTicks !== undefined ? p.majorTicks : c.majorTicks;
+
+        c.pointerWidth = (p.pointerWidth !== undefined
+            && p.pointerWidth >= 2
+            && p.pointerWidth <= 10) ? p.pointerWidth : c.pointerWidth;
+
+        c.pointerLengthPercent = (p.pointerLength !== undefined
+            && p.pointerLength >= 0.3
+            && p.pointerLength <= 1) ? p.pointerLength : c.pointerLengthPercent;
+
+        c.mainRingWidth = (p.mainRingWidth !== undefined
+            && p.mainRingWidth >= 1) ? p.mainRingWidth : c.mainRingWidth;
+
+        c.ticksRingWidth = (p.ticksRingWidth !== undefined
+            && p.ticksRingWidth >= 0
+            && p.ticksRingWidth <= 30) ? p.ticksRingWidth : c.ticksRingWidth;
+
+        c.tickColors = (p.tickColors !== undefined
+            && Array.isArray(p.tickColors)
+            && p.tickColors.length === 2) ? p.tickColors : c.tickColors;
+
+        c.arcColorFn = d3.interpolateHsl(d3.rgb(c.tickColors[0]), d3.rgb(this.config.tickColors[1]))
+
+        c.pointerColor = p.pointerColor !== undefined ? p.pointerColor : c.pointerColor;
+
+        c.arcColor = p.arcColor !== undefined ? p.arcColor : c.arcColor;
+
+        c.labelInset = c.mainRingWidth + c.mainRingInset + c.ticksRingInset + c.ticksRingWidth + 15;
+
+        this.setState({ config: c });
 
     }
 
@@ -93,12 +140,12 @@ export class SimpleGuageChart extends Component {
 
     configure() {
         let that = this;
-        let {config} = this;
+        let {config} = this.state;
 
         this.range = config.maxAngle - config.minAngle;
         this.r = config.size / 2;
         let r = this.r;
-        this.pointerHeadLength = Math.round(r * config.pointerHeadLengthPercent);
+        this.pointerLength = Math.round(r * config.pointerLengthPercent);
 
         // a linear scale that maps domain values to a percent from 0..1
         this.scale = d3.scaleLinear()
@@ -113,8 +160,8 @@ export class SimpleGuageChart extends Component {
 
 
         const {innerRadius} = d3.arc();
-        this.arc = innerRadius(r - config.ringWidth - config.ringInset - config.mainRingWidth)
-            .outerRadius(r - config.ringInset - config.mainRingWidth)
+        this.arc = innerRadius(r - config.ticksRingWidth - config.ticksRingInset - config.mainRingWidth - config.mainRingInset)
+            .outerRadius(r - config.ticksRingInset - config.mainRingWidth - config.mainRingInset)
             .startAngle(function (d, i) {
                 let ratio = d * i;
                 return that.deg2rad(config.minAngle + (ratio * that.range) - 1);
@@ -134,8 +181,8 @@ export class SimpleGuageChart extends Component {
     renderGraph(newValue) {
         console.log(newValue);
         let that = this;
-        let elem = document.getElementById("#" + this.uniqueId);
-        let {config} = this;
+        let elem = document.getElementById("#" + this.props.id);
+        let {config} = this.state;
         let svg = d3.select(elem)
             .append('svg:svg')
             .attr('class', 'gauge')
@@ -153,7 +200,7 @@ export class SimpleGuageChart extends Component {
             .endAngle(this.deg2rad(config.maxAngle + 5))
         svg.append("path")
             .attr("d", mainArc)
-            .attr("fill", "#b3b3b3") // mainArc Color
+            .attr("fill", config.arcColor) // mainArc Color
             .attr("transform", centerTx);
 
         let arcs = svg.append('g')
@@ -177,7 +224,7 @@ export class SimpleGuageChart extends Component {
             .attr('transform', function (d) {
                 let ratio = that.scale(d);
                 let newAngle = config.minAngle + (ratio * that.range);
-                return 'rotate(' + newAngle + ') translate(0,' + (config.labelInset - r ) + ')';
+                return 'rotate(' + newAngle + ') translate(0,' + (config.labelInset - r) + ')';
             })
             .text(config.labelFormat)
             .style('fill', '#666')
@@ -186,7 +233,7 @@ export class SimpleGuageChart extends Component {
             .style('font-weight', 'bold')
 
         let lineData = [[config.pointerWidth, 0],
-            [0, -that.pointerHeadLength],
+            [0, -that.pointerLength],
             [-(config.pointerWidth), 0],
             [0, config.pointerTailLength],
             [config.pointerWidth, 0]];
@@ -196,10 +243,10 @@ export class SimpleGuageChart extends Component {
         let pg = svg.append('g').data([lineData])
             .attr('class', 'pointer')
             .attr('transform', centerTx)
-            .style('fill', '#ff0500')
-            .style('stroke', '#ff0500');
+            .style('fill', config.pointerColor)
+            .style('stroke', config.pointerColor);
 
-        let circle = pg.append('circle')
+        pg.append('circle')
             .attr('r', this.config.pointerWidth)
 
         this.setState({
@@ -213,7 +260,7 @@ export class SimpleGuageChart extends Component {
 
     update() {
         let newValue = this.props.value;
-        let {config} = this;
+        let {config} = this.state;
         if (newValue > config.maxValue) newValue = config.maxValue + (0.01 * config.maxValue);
         let ratio = this.scale(newValue);
         let newAngle = config.minAngle + (ratio * this.range);
@@ -227,11 +274,12 @@ export class SimpleGuageChart extends Component {
 
 
     render() {
+        let {config} = this.state;
         return (
             <div className={`${styles['sr-guage-chart-wrapper']} sr-guage-chart-wrapper`}>
-                <div id={`#${this.uniqueId}`} className={styles['sr-guage-chart']}>
+                <div id={`#${this.props.id}`} className={styles['sr-guage-chart']}>
                 </div>
-                <div className={styles['sr-guage-chart-value']} style={{width: this.config.width}}>
+                <div className={styles['sr-guage-chart-value']} style={{width: config.width}}>
                     <strong>{this.props.value}</strong><br/>
                 </div>
             </div>
