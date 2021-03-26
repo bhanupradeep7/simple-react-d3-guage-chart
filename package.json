@@ -26,7 +26,8 @@
     "chart",
     "meter",
     "speedometer",
-    "odometer"
+    "odometer",
+    "SimpleGuageChart"
   ],
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
