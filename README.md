@@ -20,7 +20,7 @@ import 'simple-react-d3-guage-chart/dist/index.css'
 
 class Example extends Component {
   render() {
-    return <SimpleGuageChart value={40}/>
+    return <SimpleGuageChart id={"guage-01"} value={40}/>
   }
 }
 ```
@@ -28,7 +28,7 @@ class Example extends Component {
 ## Examples
 ![simple-react-d3-guage-chart](guageChart.png)
 
-Properties
+## Properties
 
 | Name            | PropType                    | Description                                                    | Default value          |
 |-----------------|-----------------------------|----------------------------------------------------------------|------------------------|

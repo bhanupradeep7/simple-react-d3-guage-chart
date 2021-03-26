@@ -1,6 +1,6 @@
 {
   "name": "simple-react-d3-guage-chart",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "simple guage chart for react made using d3",
   "author": {
     "name": "Banu Pradeep",
@@ -8,7 +8,11 @@
   },
   "homepage": "https://github.com/bhanupradeep7/simple-react-d3-guage-chart",
   "license": "MIT",
-  "repository": "bhanupradeep7/simple-react-d3-guage-chart",
+  "bugs": "https://github.com/bhanupradeep7/simple-react-d3-guage-chart/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhanupradeep7/simple-react-d3-guage-chart.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
@@ -32,9 +36,10 @@
     "test:build": "run-s build",
     "test:lint": "eslint .",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
+    "test:watch": "react-scripts test --env=jsdom"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "react": "^16.0.0"
