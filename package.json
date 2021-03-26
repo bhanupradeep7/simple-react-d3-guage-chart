@@ -2,7 +2,11 @@
   "name": "simple-react-d3-guage-chart",
   "version": "1.0.0",
   "description": "simple guage chart for react made using d3",
-  "author": "bhanupradeep7",
+  "author": {
+    "name": "Banu Pradeep",
+    "email": "bhanupradeep7@gmail.com"
+  },
+  "homepage": "https://github.com/bhanupradeep7/simple-react-d3-guage-chart",
   "license": "MIT",
   "repository": "bhanupradeep7/simple-react-d3-guage-chart",
   "main": "dist/index.js",
@@ -11,6 +15,15 @@
   "engines": {
     "node": ">=10"
   },
+  "keywords": [
+    "react",
+    "d3",
+    "gauge",
+    "chart",
+    "meter",
+    "speedometer",
+    "odometer"
+  ],
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",

@@ -25,6 +25,9 @@ class Example extends Component {
 }
 ```
 
+## Examples
+![simple-react-d3-guage-chart](guageChart.png)
+
 Properties
 
 | Name            | PropType                    | Description                                                    | Default value          |
