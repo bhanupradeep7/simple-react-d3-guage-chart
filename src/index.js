@@ -51,6 +51,9 @@ export class SimpleGuageChart extends Component {
 
             arcColor: '#b3b3b3',
             pointerColor: '#ff0500',
+
+            tickFontColor: '#666',
+            fontColor: '#666',
         }
 
         this.config.arcColorFn = d3.interpolateHsl(d3.rgb(this.config.tickColors[0]), d3.rgb(this.config.tickColors[1]))
@@ -123,6 +126,9 @@ export class SimpleGuageChart extends Component {
         c.arcColor = p.arcColor !== undefined ? p.arcColor : c.arcColor;
 
         c.labelInset = c.mainRingWidth + c.mainRingInset + c.ticksRingInset + c.ticksRingWidth + 15;
+
+        c.tickFontColor = p.tickFontColor !== undefined ? p.tickFontColor : c.tickFontColor;
+        c.fontColor = p.fontColor !== undefined ? p.fontColor : c.fontColor;
 
         this.setState({ config: c });
 
@@ -227,7 +233,7 @@ export class SimpleGuageChart extends Component {
                 return 'rotate(' + newAngle + ') translate(0,' + (config.labelInset - r) + ')';
             })
             .text(config.labelFormat)
-            .style('fill', '#666')
+            .style('fill', config.tickFontColor)
             .style('text-anchor', 'middle')
             .style('font-size', '13px')
             .style('font-weight', 'bold')
@@ -275,12 +281,15 @@ export class SimpleGuageChart extends Component {
 
     render() {
         let {config} = this.state;
+        let valueStyle = {
+            color: config.fontColor
+        };
         return (
             <div className={`${styles['sr-guage-chart-wrapper']} sr-guage-chart-wrapper`}>
                 <div id={`#${this.props.id}`} className={styles['sr-guage-chart']}>
                 </div>
                 <div className={styles['sr-guage-chart-value']} style={{width: config.width}}>
-                    <strong>{this.props.value}</strong><br/>
+                    <strong style={valueStyle}>{this.props.value}</strong><br/>
                 </div>
             </div>
         )

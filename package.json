@@ -1,6 +1,6 @@
 {
   "name": "simple-react-d3-guage-chart",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "simple guage chart for react made using d3",
   "author": {
     "name": "Banu Pradeep",

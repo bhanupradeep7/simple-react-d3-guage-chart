@@ -103,6 +103,8 @@ const App = () => {
                     arcColor={"#fff"}
                     pointerColor={"#666"}
                     tickColors={["#fff", "#fff"]}
+                    fontColor={"#fff"}
+                    tickFontColor={"#fff"}
                 />
                         `}
                     </pre>
@@ -119,6 +121,8 @@ const App = () => {
                                       arcColor={"#fff"}
                                       pointerColor={"#666"}
                                       tickColors={["#fff", "#fff"]}
+                                      fontColor={"#fff"}
+                                      tickFontColor={"#fff"}
                     />
                 </td>
             </tr>

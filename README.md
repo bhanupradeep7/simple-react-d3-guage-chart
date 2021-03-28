@@ -47,6 +47,8 @@ class Example extends Component {
 | tickColors      | PropTypes.array             | Color of ticks. Should be an array of length 2.                | ["#d92121", "#12af5a"] |
 | pointerColor    | PropTypes.string            | Color of Pointer                                               | "#ff0500"              |
 | arcColor        | PropTypes.string            | Color of Main Arc                                              | "#b3b3b3"              |
+| tickFontColor   | PropTypes.string            | Color of Text on scale                                         | "#666"                 |
+| fontColor       | PropTypes.string            | Color of Value presented on scale                              | "#666"                 |
 
 ## License
 
